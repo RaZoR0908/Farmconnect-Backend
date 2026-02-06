@@ -1,6 +1,10 @@
 const express = require('express');
 const cors = require('cors');
-const supabase = require('./config/db'); // ✅ correct path
+const supabase = require('./config/db');
+
+// Import routes
+const authRoutes = require('./routes/authRoutes');
+const productRoutes = require('./routes/productRoutes');
 
 const app = express();
 
@@ -12,6 +16,10 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.json({ message: '🚀 FarmConnect API running' });
 });
+
+// API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
 
 // App health check
 app.get('/api/health', (req, res) => {
