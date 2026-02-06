@@ -5,6 +5,8 @@ const supabase = require('./config/db');
 // Import routes
 const authRoutes = require('./routes/authRoutes');
 const productRoutes = require('./routes/productRoutes');
+const farmerRoutes = require('./routes/farmerRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 
 const app = express();
 
@@ -20,6 +22,8 @@ app.get('/', (req, res) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/farmer', farmerRoutes);
+app.use('/api/orders', orderRoutes);
 
 // App health check
 app.get('/api/health', (req, res) => {

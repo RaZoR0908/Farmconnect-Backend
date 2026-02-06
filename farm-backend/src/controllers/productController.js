@@ -87,6 +87,35 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
+// Get farmer's own products
+exports.getMyProducts = async (req, res) => {
+  try {
+    const farmer_id = req.user.id;
+
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('farmer_id', farmer_id)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    res.json({
+      success: true,
+      count: data.length,
+      data
+    });
+
+  } catch (error) {
+    console.error('Get my products error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching your products',
+      error: error.message
+    });
+  }
+};
+
 // Get single product by ID
 exports.getProductById = async (req, res) => {
   try {
@@ -134,7 +163,29 @@ exports.getProductById = async (req, res) => {
 exports.updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
+    const farmer_id = req.user.id;
     const { name, category, price, unit, quantity, description, image_url } = req.body;
+
+    // Check if product exists and belongs to farmer
+    const { data: existingProduct, error: checkError } = await supabase
+      .from('products')
+      .select('farmer_id')
+      .eq('id', id)
+      .single();
+
+    if (checkError || !existingProduct) {
+      return res.status(404).json({
+        success: false,
+        message: 'Product not found'
+      });
+    }
+
+    if (existingProduct.farmer_id !== farmer_id) {
+      return res.status(403).json({
+        success: false,
+        message: 'You can only update your own products'
+      });
+    }
 
     const updateData = {};
     if (name) updateData.name = name;
@@ -153,13 +204,6 @@ exports.updateProduct = async (req, res) => {
       .single();
 
     if (error) throw error;
-
-    if (!data) {
-      return res.status(404).json({
-        success: false,
-        message: 'Product not found'
-      });
-    }
 
     res.json({
       success: true,
@@ -181,6 +225,28 @@ exports.updateProduct = async (req, res) => {
 exports.deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
+    const farmer_id = req.user.id;
+
+    // Check if product exists and belongs to farmer
+    const { data: existingProduct, error: checkError } = await supabase
+      .from('products')
+      .select('farmer_id')
+      .eq('id', id)
+      .single();
+
+    if (checkError || !existingProduct) {
+      return res.status(404).json({
+        success: false,
+        message: 'Product not found'
+      });
+    }
+
+    if (existingProduct.farmer_id !== farmer_id) {
+      return res.status(403).json({
+        success: false,
+        message: 'You can only delete your own products'
+      });
+    }
 
     const { error } = await supabase
       .from('products')
