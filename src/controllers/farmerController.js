@@ -46,7 +46,6 @@ exports.getFarmerStats = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Farmer stats error:', error);
     res.status(500).json({
       success: false,
       message: 'Error fetching stats',
@@ -93,7 +92,6 @@ exports.updateProfile = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Update profile error:', error);
     res.status(500).json({
       success: false,
       message: 'Error updating profile',

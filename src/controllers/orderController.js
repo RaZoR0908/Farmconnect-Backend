@@ -85,7 +85,6 @@ exports.createOrder = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Create order error:', error);
     res.status(500).json({
       success: false,
       message: 'Error creating order',
@@ -125,7 +124,6 @@ exports.getFarmerOrders = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get farmer orders error:', error);
     res.status(500).json({
       success: false,
       message: 'Error fetching orders',
@@ -158,7 +156,6 @@ exports.getBuyerOrders = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get buyer orders error:', error);
     res.status(500).json({
       success: false,
       message: 'Error fetching orders',
@@ -223,7 +220,6 @@ exports.acceptOrder = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Accept order error:', error);
     res.status(500).json({
       success: false,
       message: 'Error accepting order',
@@ -282,7 +278,6 @@ exports.rejectOrder = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Reject order error:', error);
     res.status(500).json({
       success: false,
       message: 'Error rejecting order',

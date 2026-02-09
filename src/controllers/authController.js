@@ -70,7 +70,6 @@ exports.register = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Registration error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error during registration',
@@ -105,7 +104,6 @@ exports.getProfile = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get profile error:', error);
     res.status(500).json({
       success: false,
       message: 'Error fetching profile',
@@ -169,7 +167,6 @@ exports.login = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Login error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error during login',

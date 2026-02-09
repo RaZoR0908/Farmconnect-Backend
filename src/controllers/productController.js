@@ -31,7 +31,6 @@ exports.createProduct = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Create product error:', error);
     res.status(500).json({
       success: false,
       message: 'Error creating product',
@@ -95,7 +94,6 @@ exports.getAllProducts = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get products error:', error);
     res.status(500).json({
       success: false,
       message: 'Error fetching products',
@@ -124,7 +122,6 @@ exports.getMyProducts = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get my products error:', error);
     res.status(500).json({
       success: false,
       message: 'Error fetching your products',
@@ -167,7 +164,6 @@ exports.getProductById = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get product error:', error);
     res.status(500).json({
       success: false,
       message: 'Error fetching product',
@@ -229,7 +225,6 @@ exports.updateProduct = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Update product error:', error);
     res.status(500).json({
       success: false,
       message: 'Error updating product',
@@ -278,7 +273,6 @@ exports.deleteProduct = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Delete product error:', error);
     res.status(500).json({
       success: false,
       message: 'Error deleting product',
