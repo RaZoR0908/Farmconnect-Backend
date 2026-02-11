@@ -4,7 +4,7 @@ const { calculatePrice } = require('../utils/pricingHelper');
 // Create new product (Farmer only)
 exports.createProduct = async (req, res) => {
   try {
-    const { name, category, price, unit, quantity, description, image_url } = req.body;
+    const { name, category, price, unit, quantity, description, image_url, image_urls } = req.body;
     const farmer_id = req.user.id; // Get farmer ID from JWT token
 
     // Validate required fields
@@ -15,10 +15,23 @@ exports.createProduct = async (req, res) => {
       });
     }
 
+    // Support both single image_url and multiple image_urls
+    const finalImageUrls = image_urls || (image_url ? [image_url] : null);
+
     // Insert product
     const { data, error } = await supabase
       .from('products')
-      .insert([{ farmer_id, name, category, price, unit, quantity, description, image_url }])
+      .insert([{ 
+        farmer_id, 
+        name, 
+        category, 
+        price, 
+        unit, 
+        quantity, 
+        description, 
+        image_url,  // Keep for backward compatibility
+        image_urls: finalImageUrls 
+      }])
       .select()
       .single();
 
@@ -177,7 +190,7 @@ exports.updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const farmer_id = req.user.id;
-    const { name, category, price, unit, quantity, description, image_url } = req.body;
+    const { name, category, price, unit, quantity, description, image_url, image_urls } = req.body;
 
     // Check if product exists and belongs to farmer
     const { data: existingProduct, error: checkError } = await supabase
@@ -206,8 +219,9 @@ exports.updateProduct = async (req, res) => {
     if (price) updateData.price = price;
     if (unit) updateData.unit = unit;
     if (quantity !== undefined) updateData.quantity = quantity;
-    if (description) updateData.description = description;
-    if (image_url) updateData.image_url = image_url;
+    if (description !== undefined) updateData.description = description;
+    if (image_url !== undefined) updateData.image_url = image_url; // Allow clearing image with empty string
+    if (image_urls !== undefined) updateData.image_urls = image_urls; // Support multiple images
 
     const { data, error } = await supabase
       .from('products')

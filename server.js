@@ -6,5 +6,6 @@ const app = require('./src/app');
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, '0.0.0.0', () => {
-  // Server is running
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📡 API URL: http://0.0.0.0:${PORT}`);
 });
