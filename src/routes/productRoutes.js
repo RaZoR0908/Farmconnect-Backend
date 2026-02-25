@@ -20,6 +20,9 @@ router.get('/:id', productController.getProductById);
 router.get('/farmer/my-products', verifyToken, checkRole('FARMER'), productController.getMyProducts);
 router.post('/', verifyToken, checkRole('FARMER'), productController.createProduct);
 
+// Stock management
+router.patch('/:id/stock', verifyToken, checkRole('FARMER'), productController.updateStock);
+
 // Protected update/delete
 router.put('/:id', verifyToken, checkRole('FARMER'), productController.updateProduct);
 router.delete('/:id', verifyToken, checkRole('FARMER'), productController.deleteProduct);

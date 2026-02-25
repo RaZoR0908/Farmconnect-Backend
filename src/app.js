@@ -8,6 +8,7 @@ const productRoutes = require('./routes/productRoutes');
 const farmerRoutes = require('./routes/farmerRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+const walletRoutes = require('./routes/walletRoutes');
 
 const app = express();
 
@@ -26,7 +27,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/farmer', farmerRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/upload', uploadRoutes);
-app.use('/api/orders', orderRoutes);
+app.use('/api/wallet', walletRoutes);
 
 // App health check
 app.get('/api/health', (req, res) => {

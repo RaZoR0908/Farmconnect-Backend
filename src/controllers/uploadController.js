@@ -38,7 +38,6 @@ exports.uploadImage = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Cloudinary upload error:', error);
     res.status(500).json({
       success: false,
       message: 'Error uploading image',
@@ -50,12 +49,7 @@ exports.uploadImage = async (req, res) => {
 // Upload multiple images
 exports.uploadMultipleImages = async (req, res) => {
   try {
-    console.log('📸 Upload request received');
-    console.log('Files:', req.files ? req.files.length : 'none');
-    console.log('Body:', req.body);
-    
     if (!req.files || req.files.length === 0) {
-      console.log('❌ No files in request');
       return res.status(400).json({
         success: false,
         message: 'No image files provided'
@@ -64,11 +58,9 @@ exports.uploadMultipleImages = async (req, res) => {
 
     // Limit to 5 images
     const files = req.files.slice(0, 5);
-    console.log(`✅ Processing ${files.length} files`);
 
     // Upload all images to Cloudinary
     const uploadPromises = files.map((file, index) => {
-      console.log(`Uploading file ${index + 1}:`, file.originalname);
       return new Promise((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
           {
@@ -80,10 +72,8 @@ exports.uploadMultipleImages = async (req, res) => {
           },
           (error, result) => {
             if (error) {
-              console.error(`❌ Cloudinary error for file ${index + 1}:`, error);
               reject(error);
             } else {
-              console.log(`✅ File ${index + 1} uploaded:`, result.secure_url);
               resolve({
                 url: result.secure_url,
                 public_id: result.public_id
@@ -107,8 +97,6 @@ exports.uploadMultipleImages = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('❌ Upload error:', error);
-    console.error('Error stack:', error.stack);
     res.status(500).json({
       success: false,
       message: 'Error uploading images',

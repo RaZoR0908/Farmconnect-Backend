@@ -137,7 +137,10 @@ exports.login = async (req, res) => {
       query = query.eq('phone', identifier);
     }
 
-    const { data: user, error } = await query.single();
+    // Use limit(1) to get first matching user (handles duplicates)
+    const { data, error } = await query.limit(1);
+    
+    const user = data && data.length > 0 ? data[0] : null;
 
     if (error || !user) {
       return res.status(401).json({

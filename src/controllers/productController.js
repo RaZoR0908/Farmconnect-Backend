@@ -294,3 +294,81 @@ exports.deleteProduct = async (req, res) => {
     });
   }
 };
+
+// Update product stock (Farmer only)
+exports.updateStock = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const farmer_id = req.user.id;
+    const { quantity, operation } = req.body; // operation: 'add' or 'set'
+
+    // Validate input
+    if (quantity === undefined || quantity === null) {
+      return res.status(400).json({
+        success: false,
+        message: 'Quantity is required'
+      });
+    }
+
+    if (parseFloat(quantity) < 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Quantity cannot be negative'
+      });
+    }
+
+    // Check if product exists and belongs to farmer
+    const { data: existingProduct, error: checkError } = await supabase
+      .from('products')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (checkError || !existingProduct) {
+      return res.status(404).json({
+        success: false,
+        message: 'Product not found'
+      });
+    }
+
+    if (existingProduct.farmer_id !== farmer_id) {
+      return res.status(403).json({
+        success: false,
+        message: 'You can only update your own products'
+      });
+    }
+
+    // Calculate new quantity
+    let newQuantity;
+    if (operation === 'add') {
+      newQuantity = parseFloat(existingProduct.quantity) + parseFloat(quantity);
+    } else {
+      newQuantity = parseFloat(quantity);
+    }
+
+    // Update stock
+    const { data, error } = await supabase
+      .from('products')
+      .update({ quantity: newQuantity })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    res.json({
+      success: true,
+      message: 'Stock updated successfully',
+      data,
+      previousQuantity: existingProduct.quantity,
+      newQuantity: newQuantity
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error updating stock',
+      error: error.message
+    });
+  }
+};
