@@ -8,6 +8,15 @@ router.post('/register', authController.register);
 // POST /api/auth/login - Login user
 router.post('/login', authController.login);
 
+// POST /api/auth/forgot-password - Request password reset code
+router.post('/forgot-password', authController.forgotPassword);
+
+// POST /api/auth/verify-reset-code - Verify reset code (optional)
+router.post('/verify-reset-code', authController.verifyResetCode);
+
+// POST /api/auth/reset-password - Reset password with code
+router.post('/reset-password', authController.resetPassword);
+
 // GET /api/auth/profile/:userId - Get user profile
 router.get('/profile/:userId', authController.getProfile);
 
